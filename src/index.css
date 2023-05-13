@@ -18,3 +18,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@layer components {
+  .link {
+    @apply py-3 text-sm font-semibold border-b-[3px] cursor-pointer;
+  }
+}
