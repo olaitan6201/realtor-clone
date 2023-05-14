@@ -1,17 +1,51 @@
 import { useState } from "react"
 import Input from "../components/Input"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import OAuth from "../components/OAuth"
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { auth, db } from "../firebase/config"
+import { doc, serverTimestamp, setDoc } from "firebase/firestore"
+import { toast } from "react-toastify"
 
 export default function SignUp() {
-    const [formData, setFormData] = useState({
+    const dataDOM = {
         name: "",
         email: "",
         password: "",
         password_confirmation: ""
-    })
+    }
+    const [formData, setFormData] = useState(dataDOM)
+    const [formErrors, setFormErrors] = useState(dataDOM)
 
     const { name, email, password, password_confirmation } = formData
+    const {
+        name: name_err, email: email_err,
+        password: password_err,
+        password_confirmation: password_confirmation_err
+    } = formErrors
+
+    // const navigate = useNavigate()
+
+    const validateFields = () => {
+        const fieldValues = { ...formData }
+        for (const field in fieldValues) {
+            if (fieldValues[field]?.trim().length === 0) {
+                return setFormErrors((prevState) => ({
+                    ...prevState,
+                    [field]: 'This field is required'
+                }))
+            }
+        }
+
+        if (password.trim() !== password_confirmation.trim()) {
+            return setFormErrors((prevState) => ({
+                ...prevState,
+                password_confirmation: 'Password confirmation failed'
+            }))
+        }
+
+        return true;
+    }
 
     const handleInput = (e) => {
         const { id, value } = e.target
@@ -19,6 +53,38 @@ export default function SignUp() {
             ...prevState,
             [id]: value
         }))
+        setFormErrors((prevState) => ({
+            ...prevState,
+            [id]: ''
+        }))
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if (validateFields() !== true) return;
+        try {
+            const { email, password } = formData
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+            updateProfile(auth.currentUser, {
+                displayName: name
+            })
+            const user = userCredential.user
+
+            const formDataCopy = { ...formData }
+            delete formDataCopy.password
+            delete formDataCopy.password_confirmation
+            formDataCopy.timestamp = serverTimestamp()
+
+            await setDoc(doc(db, "users", user.uid), formDataCopy)
+            toast("Sign Up successful!")
+            // navigate('/')
+        } catch (error) {
+            // return console.log(error);
+            let { code, message } = error
+            message = message.replace('Firebase:', '')
+            message = message.replace('auth/', '')
+            toast.error(message)
+        }
     }
 
     return (
@@ -34,30 +100,34 @@ export default function SignUp() {
                     />
                 </div>
                 <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <Input
                             type="text" id="name"
                             value={name}
                             event={handleInput}
                             placeholder="Your name"
+                            error={name_err}
                         />
                         <Input
                             type="email" id="email"
                             value={email}
                             event={handleInput}
                             placeholder="Email address"
+                            error={email_err}
                         />
                         <Input
                             id="password"
                             value={password}
                             event={handleInput}
                             isPassword
+                            error={password_err}
                         />
                         <Input
                             id="password_confirmation"
                             value={password_confirmation}
                             event={handleInput}
                             isPassword
+                            error={password_confirmation_err}
                         />
                         <div className="my-3 flex justify-between whitespace-nowrap text-sm sm:text-md">
                             <p>Already have an account?
