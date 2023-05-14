@@ -24,7 +24,7 @@ export default function SignUp() {
         password_confirmation: password_confirmation_err
     } = formErrors
 
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
 
     const validateFields = () => {
         const fieldValues = { ...formData }
@@ -76,8 +76,8 @@ export default function SignUp() {
             formDataCopy.timestamp = serverTimestamp()
 
             await setDoc(doc(db, "users", user.uid), formDataCopy)
-            toast("Sign Up successful!")
-            // navigate('/')
+            toast.success("Sign Up successful!")
+            navigate('/')
         } catch (error) {
             // return console.log(error);
             let { code, message } = error

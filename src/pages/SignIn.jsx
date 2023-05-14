@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Input from "../components/Input"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import OAuth from "../components/OAuth"
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../firebase/config"
@@ -13,6 +13,8 @@ export default function SignIn() {
     }
     const [formData, setFormData] = useState(dataDOM)
     const [formErrors, setFormErrors] = useState(dataDOM)
+
+    const navigate = useNavigate()
 
     const { email, password } = formData
     const {
@@ -53,9 +55,9 @@ export default function SignIn() {
             const { email, password } = formData
             const userCredential = await signInWithEmailAndPassword(auth, email, password)
             const user = userCredential.user
-            if (user) return toast("Sign In successful!")
+            if (user) return toast.success("Sign In successful!")
             toast.error("Unable to Sign In!")
-            // navigate('/')
+            navigate('/')
         } catch (error) {
             // return console.log(error);
             let { code, message } = error

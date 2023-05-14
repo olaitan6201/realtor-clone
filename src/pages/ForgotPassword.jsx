@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Input from "../components/Input"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import OAuth from "../components/OAuth"
 import { toast } from "react-toastify"
 import { sendPasswordResetEmail } from "firebase/auth"
@@ -9,6 +9,8 @@ import { auth } from "../firebase/config"
 export default function SignIn() {
     const [email, setEmail] = useState('')
     const [email_err, setEmailErr] = useState('')
+
+    const navigate = useNavigate()
 
     const handleInput = (e) => {
         const { id, value } = e.target
@@ -26,6 +28,8 @@ export default function SignIn() {
             await sendPasswordResetEmail(auth, email)
 
             toast.success("Email sent successful!")
+
+            navigate('/')
         } catch (error) {
             toast.error('Could not send reset password')
         }
