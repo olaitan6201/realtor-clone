@@ -2,20 +2,19 @@ import { useState } from "react"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 export default function Input({
-    type = 'text', id = '', value = '',
-    event, placeholder = '', Icon = '',
-    isPassword = false, error = ''
+    event, Icon = '', isPassword = false, 
+    error = '', ...props
 }) {
     const [showPassword, setShowPassword] = useState(false)
     return (
         <div className="relative my-3">
             {isPassword && (
                 <input
-                    type={showPassword ? 'text' : 'password'} id={id}
-                    value={value}
+                    type={showPassword ? 'text' : 'password'}
                     onChange={event}
                     placeholder="••••••"
                     className="w-full input flex-1"
+                    {...props}
                 />
             )}
             {isPassword && (showPassword ?
@@ -26,11 +25,9 @@ export default function Input({
 
             {!isPassword && (
                 <input
-                    type={type} id={id}
-                    value={value}
                     onChange={event}
-                    placeholder={placeholder}
                     className="w-full input flex-1"
+                    {...props}
                 />
             )}
             {!isPassword && Icon && <Icon className="text-xl cursor-pointer absolute right-3 top-3" />}
