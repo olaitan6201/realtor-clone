@@ -55,9 +55,11 @@ export default function SignIn() {
             const { email, password } = formData
             const userCredential = await signInWithEmailAndPassword(auth, email, password)
             const user = userCredential.user
-            if (user) return toast.success("Sign In successful!")
+            if (user) {
+                toast.success("Sign In successful!")
+                return navigate('/')
+            }
             toast.error("Unable to Sign In!")
-            navigate('/')
         } catch (error) {
             // return console.log(error);
             let { code, message } = error
