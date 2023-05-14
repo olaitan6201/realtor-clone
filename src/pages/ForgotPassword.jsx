@@ -2,13 +2,33 @@ import { useState } from "react"
 import Input from "../components/Input"
 import { Link } from "react-router-dom"
 import OAuth from "../components/OAuth"
+import { toast } from "react-toastify"
+import { sendPasswordResetEmail } from "firebase/auth"
+import { auth } from "../firebase/config"
 
 export default function SignIn() {
     const [email, setEmail] = useState('')
+    const [email_err, setEmailErr] = useState('')
 
     const handleInput = (e) => {
         const { id, value } = e.target
         setEmail(value)
+        setEmailErr('')
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        if (email.trim().length === 0)
+            return setEmailErr('This field is required')
+
+        try {
+            await sendPasswordResetEmail(auth, email)
+
+            toast.success("Email sent successful!")
+        } catch (error) {
+            toast.error('Could not send reset password')
+        }
     }
 
     return (
@@ -24,12 +44,13 @@ export default function SignIn() {
                     />
                 </div>
                 <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <Input
                             type="email" id="email"
                             value={email}
                             event={handleInput}
                             placeholder="Email address"
+                            error={email_err}
                         />
                         <button
                             type="submit"
