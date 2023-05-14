@@ -2,8 +2,9 @@ import { useState } from "react"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 export default function Input({
-    event, Icon = '', isPassword = false, 
-    error = '', ...props
+    event, Icon = '', isPassword = false,
+    error = '', extraClass = '',
+    ...props
 }) {
     const [showPassword, setShowPassword] = useState(false)
     return (
@@ -13,7 +14,7 @@ export default function Input({
                     type={showPassword ? 'text' : 'password'}
                     onChange={event}
                     placeholder="••••••"
-                    className="w-full input flex-1"
+                    className={`w-full input flex-1 ${extraClass}`}
                     {...props}
                 />
             )}
@@ -26,7 +27,7 @@ export default function Input({
             {!isPassword && (
                 <input
                     onChange={event}
-                    className="w-full input flex-1"
+                    className={`w-full input flex-1 ${extraClass}`}
                     {...props}
                 />
             )}
