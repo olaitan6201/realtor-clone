@@ -12,6 +12,10 @@ body {
   font-family: 'Work Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(240, 253, 244);
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
 code {
@@ -22,5 +26,11 @@ code {
 @layer components {
   .link {
     @apply py-3 text-sm font-semibold border-b-[3px] cursor-pointer;
+  }
+  .input {
+    @apply px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded-md transition ease-in-out;
+  }
+  .auth-link{
+    @apply transition duration-200 ease-in-out;
   }
 }
