@@ -35,7 +35,7 @@ export default function Header() {
                 <div>
                     <ul className="flex space-x-10">
                         {pageRoutes?.map((r, i) =>
-                            <PageRoute route={r} location={location} />
+                            <PageRoute key={i} route={r} location={location} />
                         )}
                     </ul>
                 </div>
