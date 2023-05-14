@@ -2,14 +2,23 @@ import { useState } from "react"
 import Input from "../components/Input"
 import { Link } from "react-router-dom"
 import OAuth from "../components/OAuth"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "../firebase/config"
+import { toast } from "react-toastify"
 
 export default function SignIn() {
-    const [formData, setFormData] = useState({
+    const dataDOM = {
         email: "",
         password: ""
-    })
+    }
+    const [formData, setFormData] = useState(dataDOM)
+    const [formErrors, setFormErrors] = useState(dataDOM)
 
     const { email, password } = formData
+    const {
+        email: email_err,
+        password: password_err
+    } = formErrors
 
     const handleInput = (e) => {
         const { id, value } = e.target
@@ -17,6 +26,43 @@ export default function SignIn() {
             ...prevState,
             [id]: value
         }))
+        setFormErrors((prevState) => ({
+            ...prevState,
+            [id]: ''
+        }))
+    }
+
+    const validateFields = () => {
+        const fieldValues = { ...formData }
+        for (const field in fieldValues) {
+            if (fieldValues[field]?.trim().length === 0) {
+                return setFormErrors((prevState) => ({
+                    ...prevState,
+                    [field]: 'This field is required'
+                }))
+            }
+        }
+
+        return true;
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if (validateFields() !== true) return;
+        try {
+            const { email, password } = formData
+            const userCredential = await signInWithEmailAndPassword(auth, email, password)
+            const user = userCredential.user
+            if (user) return toast("Sign In successful!")
+            toast.error("Unable to Sign In!")
+            // navigate('/')
+        } catch (error) {
+            // return console.log(error);
+            let { code, message } = error
+            message = message.replace('Firebase:', '')
+            message = message.replace('auth/', '')
+            toast.error(message)
+        }
     }
 
     return (
@@ -32,18 +78,20 @@ export default function SignIn() {
                     />
                 </div>
                 <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <Input
                             type="email" id="email"
                             value={email}
                             event={handleInput}
                             placeholder="Email address"
+                            error={email_err}
                         />
                         <Input
                             id="password"
                             value={password}
                             event={handleInput}
                             isPassword
+                            error={password_err}
                         />
                         <div className="my-3 flex justify-between whitespace-nowrap text-sm sm:text-md">
                             <p>Don't have an account?
