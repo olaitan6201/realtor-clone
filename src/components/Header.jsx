@@ -43,7 +43,7 @@ export default function Header() {
     }, [auth])
     
     return (
-        <header className="bg-white border-b shadow-sm sticky top-0 z-50">
+        <header className="bg-white border-b shadow-sm sticky top-0 z-40">
             <div className="flex justify-between items-center px-3 max-w-6xl mx-auto">
                 <div className="cursor-pointer" onClick={() => navigate('/')}>
                     <img
