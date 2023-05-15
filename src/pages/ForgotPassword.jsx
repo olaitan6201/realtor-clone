@@ -1,7 +1,6 @@
 import { useState } from "react"
 import Input from "../components/Input"
 import { Link, useNavigate } from "react-router-dom"
-import OAuth from "../components/OAuth"
 import { toast } from "react-toastify"
 import { sendPasswordResetEmail } from "firebase/auth"
 import { auth } from "../firebase/config"
@@ -13,7 +12,7 @@ export default function SignIn() {
     const navigate = useNavigate()
 
     const handleInput = (e) => {
-        const { id, value } = e.target
+        const { value } = e.target
         setEmail(value)
         setEmailErr('')
     }

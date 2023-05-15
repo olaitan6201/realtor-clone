@@ -80,7 +80,7 @@ export default function SignUp() {
             navigate('/')
         } catch (error) {
             // return console.log(error);
-            let { code, message } = error
+            let { message } = error
             message = message.replace('Firebase:', '')
             message = message.replace('auth/', '')
             toast.error(message)

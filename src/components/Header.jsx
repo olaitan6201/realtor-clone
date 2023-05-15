@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from "react-router"
 import PageRoute from "./PageRoute"
-import { useAuthStatus } from "../hooks/useAuthStatus"
 import { useEffect, useState } from "react"
 import { auth } from "../firebase/config"
 import { onAuthStateChanged } from "firebase/auth"
@@ -40,7 +39,7 @@ export default function Header() {
                 setPageState({ title: 'Sign In', url: '/sign-in' })
             }
         })
-    }, [auth])
+    }, [])
     
     return (
         <header className="bg-white border-b shadow-sm sticky top-0 z-40">

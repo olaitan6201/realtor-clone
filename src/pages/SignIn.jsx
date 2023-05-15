@@ -62,7 +62,7 @@ export default function SignIn() {
             toast.error("Unable to Sign In!")
         } catch (error) {
             // return console.log(error);
-            let { code, message } = error
+            let { message } = error
             message = message.replace('Firebase:', '')
             message = message.replace('auth/', '')
             toast.error(message)
