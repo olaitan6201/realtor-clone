@@ -28,7 +28,7 @@ code {
     @apply py-3 text-sm font-semibold border-b-[3px] cursor-pointer;
   }
   .input {
-    @apply px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded-md transition ease-in-out;
+    @apply px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded-md transition ease-in-out duration-200 focus:text-gray-700 focus:bg-white focus:border-slate-600;
   }
   .auth-link{
     @apply transition duration-200 ease-in-out;
