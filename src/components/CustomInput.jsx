@@ -1,11 +1,16 @@
 export default function CustomInput({
     title = '', extraClass = '',
-    subTitle='', useTextArea = false,
+    subTitle = '', useTextArea = false,
     event, ...props
 }) {
     const handleInput = (e) => {
-        const { id, value } = e.target
-        event({ id, value })
+        if (props?.type === 'file') {
+            const { id, files } = e.target
+            event({ id, value: files })
+        } else {
+            const { id, value } = e.target
+            event({ id, value })
+        }
     }
 
     return (
